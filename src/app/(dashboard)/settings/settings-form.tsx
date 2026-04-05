@@ -10,7 +10,18 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { updateSettings } from '@/app/actions/settings'
-import { AppSetting } from '@prisma/client'
+interface AppSetting {
+  companyName: string
+  companyAddress?: string | null
+  invoiceFooter?: string | null
+  currencySymbol: string
+  dateFormat: string
+  includeTollInBill: boolean
+  includeBorderInBill: boolean
+  includeDriverWagesInBill: boolean
+  includeDieselInBill: boolean
+  includeMiscInBill: boolean
+}
 import { useRouter } from 'next/navigation'
 
 const schema = z.object({

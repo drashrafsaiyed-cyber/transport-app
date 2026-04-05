@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createDriver, updateDriver } from '@/app/actions/drivers'
-import { DriverStatus } from '@prisma/client'
+const DriverStatus = { ACTIVE: 'ACTIVE', INACTIVE: 'INACTIVE' } as const
+type DriverStatus = typeof DriverStatus[keyof typeof DriverStatus]
 
 const schema = z.object({
   name: z.string().min(1, 'Required'),

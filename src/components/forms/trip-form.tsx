@@ -12,7 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createTrip, updateTrip } from '@/app/actions/trips'
-import { PaymentStatus } from '@prisma/client'
+const PaymentStatus = { PENDING: 'PENDING', PARTIAL: 'PARTIAL', PAID: 'PAID' } as const
+type PaymentStatus = typeof PaymentStatus[keyof typeof PaymentStatus]
 import { Separator } from '@/components/ui/separator'
 
 const schema = z.object({

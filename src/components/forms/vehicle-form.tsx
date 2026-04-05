@@ -12,7 +12,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createVehicle, updateVehicle } from '@/app/actions/vehicles'
-import { VehicleType } from '@prisma/client'
+const VehicleType = {
+  TRUCK: 'TRUCK',
+  MINI_TRUCK: 'MINI_TRUCK',
+  TRAILER: 'TRAILER',
+  CONTAINER: 'CONTAINER',
+  TANKER: 'TANKER',
+  OTHER: 'OTHER',
+} as const
+type VehicleType = typeof VehicleType[keyof typeof VehicleType]
 
 const schema = z.object({
   vehicleNumber: z.string().min(1, 'Required'),
