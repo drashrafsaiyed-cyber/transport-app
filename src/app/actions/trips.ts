@@ -27,35 +27,51 @@ const tripSchema = z.object({
 })
 
 export async function createTrip(data: z.infer<typeof tripSchema>) {
-  const parsed = tripSchema.parse(data)
-  const trip = await prisma.trip.create({
-    data: {
-      ...parsed,
-      tripDate: new Date(parsed.tripDate),
-    },
-  })
-  revalidatePath('/trips')
-  revalidatePath('/dashboard')
-  return trip
+  try {
+    const parsed = tripSchema.parse(data)
+    const trip = await prisma.trip.create({
+      data: {
+        ...parsed,
+        tripDate: new Date(parsed.tripDate),
+      },
+    })
+    revalidatePath('/trips')
+    revalidatePath('/dashboard')
+    return { success: true, trip }
+  } catch (error) {
+    console.error('createTrip error:', error)
+    throw new Error('Failed to create trip. Please try again.')
+  }
 }
 
 export async function updateTrip(id: string, data: z.infer<typeof tripSchema>) {
-  const parsed = tripSchema.parse(data)
-  const trip = await prisma.trip.update({
-    where: { id },
-    data: {
-      ...parsed,
-      tripDate: new Date(parsed.tripDate),
-    },
-  })
-  revalidatePath('/trips')
-  revalidatePath(`/trips/${id}`)
-  revalidatePath('/dashboard')
-  return trip
+  try {
+    const parsed = tripSchema.parse(data)
+    const trip = await prisma.trip.update({
+      where: { id },
+      data: {
+        ...parsed,
+        tripDate: new Date(parsed.tripDate),
+      },
+    })
+    revalidatePath('/trips')
+    revalidatePath(`/trips/${id}`)
+    revalidatePath('/dashboard')
+    return { success: true, trip }
+  } catch (error) {
+    console.error('updateTrip error:', error)
+    throw new Error('Failed to update trip. Please try again.')
+  }
 }
 
 export async function deleteTrip(id: string) {
-  await prisma.trip.delete({ where: { id } })
-  revalidatePath('/trips')
-  revalidatePath('/dashboard')
+  try {
+    await prisma.trip.delete({ where: { id } })
+    revalidatePath('/trips')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (error) {
+    console.error('deleteTrip error:', error)
+    throw new Error('Failed to delete trip. Please try again.')
+  }
 }

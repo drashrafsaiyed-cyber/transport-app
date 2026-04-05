@@ -15,21 +15,37 @@ const partySchema = z.object({
 })
 
 export async function createParty(data: z.infer<typeof partySchema>) {
-  const parsed = partySchema.parse(data)
-  const party = await prisma.party.create({ data: parsed })
-  revalidatePath('/parties')
-  return party
+  try {
+    const parsed = partySchema.parse(data)
+    const party = await prisma.party.create({ data: parsed })
+    revalidatePath('/parties')
+    return { success: true, party }
+  } catch (error) {
+    console.error('createParty error:', error)
+    throw new Error('Failed to create party. Please try again.')
+  }
 }
 
 export async function updateParty(id: string, data: z.infer<typeof partySchema>) {
-  const parsed = partySchema.parse(data)
-  const party = await prisma.party.update({ where: { id }, data: parsed })
-  revalidatePath('/parties')
-  revalidatePath(`/parties/${id}`)
-  return party
+  try {
+    const parsed = partySchema.parse(data)
+    const party = await prisma.party.update({ where: { id }, data: parsed })
+    revalidatePath('/parties')
+    revalidatePath(`/parties/${id}`)
+    return { success: true, party }
+  } catch (error) {
+    console.error('updateParty error:', error)
+    throw new Error('Failed to update party. Please try again.')
+  }
 }
 
 export async function deleteParty(id: string) {
-  await prisma.party.delete({ where: { id } })
-  revalidatePath('/parties')
+  try {
+    await prisma.party.delete({ where: { id } })
+    revalidatePath('/parties')
+    return { success: true }
+  } catch (error) {
+    console.error('deleteParty error:', error)
+    throw new Error('Failed to delete party. Please try again.')
+  }
 }

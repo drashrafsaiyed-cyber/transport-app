@@ -20,39 +20,55 @@ const vehicleSchema = z.object({
 })
 
 export async function createVehicle(data: z.infer<typeof vehicleSchema>) {
-  const parsed = vehicleSchema.parse(data)
-  const vehicle = await prisma.vehicle.create({
-    data: {
-      ...parsed,
-      insuranceStartDate: parsed.insuranceStartDate ? new Date(parsed.insuranceStartDate) : null,
-      insuranceExpiry: parsed.insuranceExpiry ? new Date(parsed.insuranceExpiry) : null,
-      fitnessExpiry: parsed.fitnessExpiry ? new Date(parsed.fitnessExpiry) : null,
-      pollutionExpiry: parsed.pollutionExpiry ? new Date(parsed.pollutionExpiry) : null,
-      isActive: parsed.isActive ?? true,
-    },
-  })
-  revalidatePath('/vehicles')
-  return vehicle
+  try {
+    const parsed = vehicleSchema.parse(data)
+    const vehicle = await prisma.vehicle.create({
+      data: {
+        ...parsed,
+        insuranceStartDate: parsed.insuranceStartDate ? new Date(parsed.insuranceStartDate) : null,
+        insuranceExpiry: parsed.insuranceExpiry ? new Date(parsed.insuranceExpiry) : null,
+        fitnessExpiry: parsed.fitnessExpiry ? new Date(parsed.fitnessExpiry) : null,
+        pollutionExpiry: parsed.pollutionExpiry ? new Date(parsed.pollutionExpiry) : null,
+        isActive: parsed.isActive ?? true,
+      },
+    })
+    revalidatePath('/vehicles')
+    return { success: true, vehicle }
+  } catch (error) {
+    console.error('createVehicle error:', error)
+    throw new Error('Failed to create vehicle. Please try again.')
+  }
 }
 
 export async function updateVehicle(id: string, data: z.infer<typeof vehicleSchema>) {
-  const parsed = vehicleSchema.parse(data)
-  const vehicle = await prisma.vehicle.update({
-    where: { id },
-    data: {
-      ...parsed,
-      insuranceStartDate: parsed.insuranceStartDate ? new Date(parsed.insuranceStartDate) : null,
-      insuranceExpiry: parsed.insuranceExpiry ? new Date(parsed.insuranceExpiry) : null,
-      fitnessExpiry: parsed.fitnessExpiry ? new Date(parsed.fitnessExpiry) : null,
-      pollutionExpiry: parsed.pollutionExpiry ? new Date(parsed.pollutionExpiry) : null,
-    },
-  })
-  revalidatePath('/vehicles')
-  revalidatePath(`/vehicles/${id}`)
-  return vehicle
+  try {
+    const parsed = vehicleSchema.parse(data)
+    const vehicle = await prisma.vehicle.update({
+      where: { id },
+      data: {
+        ...parsed,
+        insuranceStartDate: parsed.insuranceStartDate ? new Date(parsed.insuranceStartDate) : null,
+        insuranceExpiry: parsed.insuranceExpiry ? new Date(parsed.insuranceExpiry) : null,
+        fitnessExpiry: parsed.fitnessExpiry ? new Date(parsed.fitnessExpiry) : null,
+        pollutionExpiry: parsed.pollutionExpiry ? new Date(parsed.pollutionExpiry) : null,
+      },
+    })
+    revalidatePath('/vehicles')
+    revalidatePath(`/vehicles/${id}`)
+    return { success: true, vehicle }
+  } catch (error) {
+    console.error('updateVehicle error:', error)
+    throw new Error('Failed to update vehicle. Please try again.')
+  }
 }
 
 export async function deleteVehicle(id: string) {
-  await prisma.vehicle.delete({ where: { id } })
-  revalidatePath('/vehicles')
+  try {
+    await prisma.vehicle.delete({ where: { id } })
+    revalidatePath('/vehicles')
+    return { success: true }
+  } catch (error) {
+    console.error('deleteVehicle error:', error)
+    throw new Error('Failed to delete vehicle. Please try again.')
+  }
 }

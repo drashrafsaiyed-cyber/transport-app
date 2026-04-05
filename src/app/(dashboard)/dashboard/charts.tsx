@@ -1,6 +1,7 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { formatCurrency } from '@/lib/utils'
 
 interface ChartData {
   month: string
@@ -22,7 +23,7 @@ export function DashboardCharts({ data }: { data: ChartData[] }) {
             <BarChart data={data} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
               <XAxis dataKey="month" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />
-              <Tooltip formatter={(value) => `₹${Number(value).toLocaleString('en-IN')}`} />
+              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
               <Legend />
               <Bar dataKey="revenue" fill="#16a34a" name="Revenue" radius={[3, 3, 0, 0]} />
               <Bar dataKey="expenses" fill="#dc2626" name="Expenses" radius={[3, 3, 0, 0]} />

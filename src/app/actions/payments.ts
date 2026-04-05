@@ -13,40 +13,45 @@ const paymentSchema = z.object({
 })
 
 export async function recordPayment(data: z.infer<typeof paymentSchema>) {
-  const parsed = paymentSchema.parse(data)
+  try {
+    const parsed = paymentSchema.parse(data)
 
-  // Create payment record
-  const payment = await prisma.payment.create({
-    data: {
-      tripId: parsed.tripId,
-      partyId: parsed.partyId,
-      amount: parsed.amount,
-      paymentDate: new Date(parsed.paymentDate),
-      notes: parsed.notes,
-    },
-  })
-
-  // Update trip paid amount and status
-  const trip = await prisma.trip.findUnique({ where: { id: parsed.tripId } })
-  if (trip) {
-    const newPaidAmount = trip.paidAmount + parsed.amount
-    let status: PaymentStatus = PaymentStatus.PARTIAL
-    if (newPaidAmount >= trip.finalBill) {
-      status = PaymentStatus.PAID
-    } else if (newPaidAmount === 0) {
-      status = PaymentStatus.PENDING
-    }
-    await prisma.trip.update({
-      where: { id: parsed.tripId },
+    // Create payment record
+    const payment = await prisma.payment.create({
       data: {
-        paidAmount: newPaidAmount,
-        paymentStatus: status,
+        tripId: parsed.tripId,
+        partyId: parsed.partyId,
+        amount: parsed.amount,
+        paymentDate: new Date(parsed.paymentDate),
+        notes: parsed.notes,
       },
     })
-  }
 
-  revalidatePath('/payments')
-  revalidatePath('/trips')
-  revalidatePath('/dashboard')
-  return payment
+    // Update trip paid amount and status
+    const trip = await prisma.trip.findUnique({ where: { id: parsed.tripId } })
+    if (trip) {
+      const newPaidAmount = trip.paidAmount + parsed.amount
+      let status: PaymentStatus = PaymentStatus.PARTIAL
+      if (newPaidAmount >= trip.finalBill) {
+        status = PaymentStatus.PAID
+      } else if (newPaidAmount === 0) {
+        status = PaymentStatus.PENDING
+      }
+      await prisma.trip.update({
+        where: { id: parsed.tripId },
+        data: {
+          paidAmount: newPaidAmount,
+          paymentStatus: status,
+        },
+      })
+    }
+
+    revalidatePath('/payments')
+    revalidatePath('/trips')
+    revalidatePath('/dashboard')
+    return { success: true, payment }
+  } catch (error) {
+    console.error('recordPayment error:', error)
+    throw new Error('Failed to record payment. Please try again.')
+  }
 }
