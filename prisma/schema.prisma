@@ -135,18 +135,28 @@ model Payment {
 }
 
 model AppSetting {
-  id                      String   @id @default(cuid())
-  companyName             String   @default("Transport Company")
-  companyAddress          String?
-  logoUrl                 String?
-  invoiceFooter           String?
-  currencySymbol          String   @default("₹")
-  dateFormat              String   @default("dd/MM/yyyy")
-  includeTollInBill       Boolean  @default(false)
-  includeBorderInBill     Boolean  @default(false)
-  includeDriverWagesInBill Boolean @default(false)
-  includeDieselInBill     Boolean  @default(false)
-  includeMiscInBill       Boolean  @default(false)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  id                       String   @id @default(cuid())
+  companyName              String   @default("Transport Company")
+  companyAddress           String?
+  logoUrl                  String?
+  invoiceFooter            String?
+  currencySymbol           String   @default("₹")
+  dateFormat               String   @default("dd/MM/yyyy")
+  includeTollInBill        Boolean  @default(false)
+  includeBorderInBill      Boolean  @default(false)
+  includeDriverWagesInBill Boolean  @default(false)
+  includeDieselInBill      Boolean  @default(false)
+  includeMiscInBill        Boolean  @default(false)
+  // GST Settings
+  companyGstNumber         String?
+  gstPercentage            Float    @default(18)
+  cgstPercentage           Float    @default(9)
+  sgstPercentage           Float    @default(9)
+  igstPercentage           Float    @default(18)
+  enableGst                Boolean  @default(false)
+  defaultGstType           String   @default("CGST_SGST")
+  invoicePrefix            String   @default("INV")
+  invoiceCounter           Int      @default(1)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
 }

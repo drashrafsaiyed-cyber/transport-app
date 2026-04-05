@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { formatDate, formatCurrency } from '@/lib/utils'
-import { Edit, ArrowLeft, Printer } from 'lucide-react'
+import { Edit, ArrowLeft, Printer, FileText } from 'lucide-react'
 import { DeleteTripButton } from './delete-button'
 
 async function getTrip(id: string) {
@@ -50,8 +50,8 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
           <h1 className="text-2xl font-bold">{trip.place}</h1>
           <p className="text-sm text-muted-foreground">{formatDate(trip.tripDate)}</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => window.print()} className="hidden sm:flex">
-          <Printer className="h-4 w-4 mr-1" />Print
+        <Button asChild className="bg-orange-600 hover:bg-orange-700 text-white hidden sm:flex">
+          <Link href={`/trips/${id}/invoice`}><FileText className="h-4 w-4 mr-1" />Generate Invoice</Link>
         </Button>
         <Button variant="outline" asChild>
           <Link href={`/trips/${id}/edit`}><Edit className="h-4 w-4 mr-1" />Edit</Link>
