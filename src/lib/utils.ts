@@ -6,8 +6,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Using regex instead of toLocaleString('en-IN') — that locale is not available
+// in Vercel's minimal Node.js ICU build and produces incorrect output on Linux.
 export function formatCurrency(amount: number, symbol = '₹') {
-  return `${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  const fixed = Math.abs(amount).toFixed(2)
+  const [intPart, decPart] = fixed.split('.')
+  const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return `${amount < 0 ? '-' : ''}${symbol}${withCommas}.${decPart}`
 }
 
 export function formatDate(date: Date | string | null, fmt = 'dd/MM/yyyy') {

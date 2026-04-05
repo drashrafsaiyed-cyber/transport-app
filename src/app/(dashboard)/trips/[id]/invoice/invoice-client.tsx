@@ -13,8 +13,12 @@ function fmtDate(d: string | Date | null | undefined) {
   try { return format(new Date(d), 'dd/MM/yyyy') } catch { return '-' }
 }
 
+// Locale-independent currency formatter (toLocaleString('en-IN') breaks on Vercel Linux)
 function fmtCur(amount: number, symbol = '₹') {
-  return `${symbol}${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  const fixed = Math.abs(amount).toFixed(2)
+  const [intPart, decPart] = fixed.split('.')
+  const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return `${amount < 0 ? '-' : ''}${symbol}${withCommas}.${decPart}`
 }
 
 interface Trip {
