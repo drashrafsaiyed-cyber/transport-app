@@ -111,61 +111,61 @@ export default async function DashboardPage() {
     <div className="p-4 md:p-6 space-y-6">
 
       {/* ── Branded Welcome Banner ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 shadow-lg">
-        {/* Background watermark logo */}
-        <div className="absolute inset-0 flex items-center justify-end pr-6 pointer-events-none select-none">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 shadow-xl">
+        {/* Watermark logo — top-right, very subtle */}
+        <div className="absolute inset-0 flex items-center justify-end pr-4 pointer-events-none select-none">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
             alt=""
             aria-hidden="true"
-            className="h-36 w-auto object-contain opacity-10 grayscale"
+            className="h-40 w-auto object-contain opacity-[0.07]"
           />
         </div>
-        {/* Decorative circles */}
-        <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" />
-        <div className="absolute -bottom-6 -right-20 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
+        {/* Soft glow circles */}
+        <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-teal-400/10 blur-2xl pointer-events-none" />
 
         {/* Content */}
         <div className="relative z-10 p-5 md:p-7">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
-              <p className="text-orange-100 text-sm font-medium mb-1">{greeting}, Juberbhai 👋</p>
+              <p className="text-slate-300 text-sm font-medium mb-1">{greeting}, Juberbhai 👋</p>
               <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
                 {data.companyName}
               </h1>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2">
                 {data.companyGstin && (
-                  <span className="text-orange-100 text-xs font-medium bg-white/15 px-2.5 py-0.5 rounded-full">
+                  <span className="text-slate-300 text-xs font-medium bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full">
                     GSTIN: {data.companyGstin}
                   </span>
                 )}
-                <span className="text-orange-100 text-xs flex items-center gap-1">
+                <span className="text-slate-400 text-xs flex items-center gap-1">
                   <CalendarDays className="h-3 w-3" />
                   {currentMonth}
                 </span>
               </div>
             </div>
-            <Button asChild size="sm" className="bg-white text-orange-700 hover:bg-orange-50 shadow font-semibold shrink-0">
+            <Button asChild size="sm" className="bg-white text-slate-800 hover:bg-slate-100 shadow-md font-semibold shrink-0">
               <Link href="/trips/new"><Plus className="h-4 w-4 mr-1" />New Trip</Link>
             </Button>
           </div>
 
-          {/* Mini stats in banner */}
+          {/* Mini stats row */}
           <div className="grid grid-cols-3 gap-3 mt-5">
-            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
-              <p className="text-xs text-orange-100">This Month Billing</p>
-              <p className="text-lg font-bold mt-0.5">{formatCurrency(data.monthlyBilling)}</p>
+            <div className="bg-white/8 border border-white/10 rounded-xl p-3 text-white backdrop-blur-sm">
+              <p className="text-xs text-slate-400 mb-0.5">This Month Billing</p>
+              <p className="text-base md:text-lg font-bold">{formatCurrency(data.monthlyBilling)}</p>
             </div>
-            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
-              <p className="text-xs text-orange-100">Est. Profit</p>
-              <p className={`text-lg font-bold mt-0.5 ${data.profit < 0 ? 'text-red-200' : ''}`}>
+            <div className="bg-white/8 border border-white/10 rounded-xl p-3 text-white backdrop-blur-sm">
+              <p className="text-xs text-slate-400 mb-0.5">Est. Profit</p>
+              <p className={`text-base md:text-lg font-bold ${data.profit < 0 ? 'text-red-300' : 'text-emerald-300'}`}>
                 {formatCurrency(data.profit)}
               </p>
             </div>
-            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
-              <p className="text-xs text-orange-100">Pending</p>
-              <p className="text-lg font-bold mt-0.5 text-yellow-200">{formatCurrency(data.pendingPayments)}</p>
+            <div className="bg-white/8 border border-white/10 rounded-xl p-3 text-white backdrop-blur-sm">
+              <p className="text-xs text-slate-400 mb-0.5">Pending</p>
+              <p className="text-base md:text-lg font-bold text-amber-300">{formatCurrency(data.pendingPayments)}</p>
             </div>
           </div>
         </div>

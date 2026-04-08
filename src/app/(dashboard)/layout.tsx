@@ -41,14 +41,14 @@ const navItems = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
   return (
-    <div className="flex flex-col h-full">
-      {/* Brand Header */}
-      <div className="flex flex-col items-center gap-2 px-4 py-5 border-b bg-gradient-to-b from-orange-50 to-white">
+    <div className="flex flex-col h-full bg-white">
+      {/* Brand Header — clean white so logo colours show perfectly */}
+      <div className="flex flex-col items-center gap-1 px-4 py-5 border-b">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo.png"
           alt="MYC Travels"
-          className="h-14 w-auto object-contain"
+          className="h-16 w-auto object-contain"
           onError={(e) => {
             const el = e.target as HTMLImageElement
             el.style.display = 'none'
@@ -56,14 +56,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             if (fallback) fallback.style.display = 'flex'
           }}
         />
-        {/* Fallback if no logo */}
+        {/* Fallback */}
         <div className="hidden items-center gap-2">
-          <div className="p-1.5 bg-orange-100 rounded-lg">
-            <Truck className="h-5 w-5 text-orange-600" />
-          </div>
-          <span className="font-semibold text-sm">MYC Travels</span>
+          <Truck className="h-5 w-5 text-blue-700" />
+          <span className="font-bold text-sm text-blue-900">MYC Travels</span>
         </div>
-        <span className="text-xs text-orange-600 font-semibold tracking-wide uppercase">
+        <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mt-1">
           Transport Manager
         </span>
       </div>
@@ -77,20 +75,23 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               href={item.href}
               onClick={onNavigate}
               className={cn(
-                'flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-                isActive ? 'bg-orange-50 text-orange-700 border-r-2 border-orange-500' : 'text-muted-foreground'
+                'flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all',
+                isActive
+                  ? 'bg-blue-50 text-blue-800 border-r-[3px] border-blue-700'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
               )}
             >
-              <item.icon className={cn('h-4 w-4 shrink-0', isActive ? 'text-orange-600' : '')} />
+              <item.icon className={cn('h-4 w-4 shrink-0', isActive ? 'text-blue-700' : '')} />
               {item.label}
-              {isActive && <ChevronRight className="h-3 w-3 ml-auto text-orange-400" />}
+              {isActive && <ChevronRight className="h-3 w-3 ml-auto text-blue-400" />}
             </Link>
           )
         })}
       </nav>
-      <div className="px-4 py-3 border-t bg-gray-50">
-        <p className="text-xs text-muted-foreground">MYC Travels v1.0</p>
-        <p className="text-xs text-orange-500 font-medium">GSTIN: 24ATFPG1538D1Z8</p>
+
+      <div className="px-4 py-3 border-t bg-slate-50">
+        <p className="text-[10px] text-slate-400 font-medium">MYC Travels v1.0</p>
+        <p className="text-[10px] text-blue-600 font-semibold">GSTIN: 24ATFPG1538D1Z8</p>
       </div>
     </div>
   )
@@ -100,9 +101,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-slate-50">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-60 flex-col border-r bg-card shrink-0">
+      <aside className="hidden md:flex w-60 flex-col border-r bg-white shrink-0 shadow-sm">
         <SidebarContent />
       </aside>
 
@@ -132,25 +133,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="MYC Travels" className="h-8 w-auto object-contain"
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-            <span className="font-semibold text-sm text-orange-700">MYC Travels</span>
           </div>
 
           <div className="flex-1" />
 
-          {/* Company badge in topbar */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-orange-50 rounded-full border border-orange-100">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-orange-700">MYC TRAVELS</span>
+          {/* Company badge */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-semibold text-blue-800">MYC TRAVELS</span>
           </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
                 <button className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-2')}>
-                  <div className="w-7 h-7 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-bold text-xs">
+                  <div className="w-7 h-7 rounded-full bg-blue-700 flex items-center justify-center text-white font-bold text-xs">
                     JG
                   </div>
-                  <span className="hidden sm:inline text-sm">Juberbhai</span>
+                  <span className="hidden sm:inline text-sm font-medium">Juberbhai</span>
                 </button>
               }
             />
