@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { formatCurrency, formatDate, isExpiringSoon, isExpired } from '@/lib/utils'
 import {
-  Truck, Users, Building2, Map, CreditCard, AlertTriangle, TrendingUp, DollarSign, Plus
+  Truck, Users, Building2, Map, CreditCard, AlertTriangle, TrendingUp, DollarSign, Plus, CalendarDays
 } from 'lucide-react'
-import { startOfMonth, endOfMonth } from 'date-fns'
+import { startOfMonth, endOfMonth, format } from 'date-fns'
 import { DashboardCharts } from './charts'
 
 async function getDashboardData() {
@@ -18,7 +18,7 @@ async function getDashboardData() {
 
     const [
       totalVehicles, totalDrivers, totalParties,
-      totalTrips, monthlyTrips, recentTrips, vehicles, allTrips
+      totalTrips, monthlyTrips, recentTrips, vehicles, allTrips, settings
     ] = await Promise.all([
       prisma.vehicle.count({ where: { isActive: true } }),
       prisma.driver.count({ where: { status: 'ACTIVE' } }),
@@ -39,6 +39,7 @@ async function getDashboardData() {
         orderBy: { tripDate: 'asc' },
         select: { tripDate: true, finalBill: true, dieselAmount: true, tollTax: true, borderTax: true, driverWages: true, miscExpense: true }
       }),
+      prisma.appSetting.findUnique({ where: { id: 'default' } }),
     ])
 
     const monthlyBilling = monthlyTrips.reduce((sum, t) => sum + t.finalBill, 0)
@@ -73,13 +74,17 @@ async function getDashboardData() {
       totalVehicles, totalDrivers, totalParties, totalTrips,
       monthlyBilling, pendingPayments, monthlyExpenses,
       profit: monthlyBilling - monthlyExpenses,
-      recentTrips, alerts, chartData
+      recentTrips, alerts, chartData,
+      companyName: settings?.companyName ?? 'MYC TRAVELS',
+      companyGstin: settings?.companyGstNumber ?? '',
     }
   } catch {
     return {
       totalVehicles: 0, totalDrivers: 0, totalParties: 0, totalTrips: 0,
       monthlyBilling: 0, pendingPayments: 0, monthlyExpenses: 0, profit: 0,
-      recentTrips: [], alerts: [], chartData: []
+      recentTrips: [], alerts: [], chartData: [],
+      companyName: 'MYC TRAVELS',
+      companyGstin: '',
     }
   }
 }
@@ -98,13 +103,72 @@ export default async function DashboardPage() {
     { title: 'Est. Profit', value: formatCurrency(data.profit), icon: TrendingUp, color: 'text-teal-600', bg: 'bg-teal-50' },
   ]
 
+  const now = new Date()
+  const greeting = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 17 ? 'Good Afternoon' : 'Good Evening'
+  const currentMonth = format(now, 'MMMM yyyy')
+
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Button asChild size="sm">
-          <Link href="/trips/new"><Plus className="h-4 w-4 mr-1" />New Trip</Link>
-        </Button>
+
+      {/* ── Branded Welcome Banner ── */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 shadow-lg">
+        {/* Background watermark logo */}
+        <div className="absolute inset-0 flex items-center justify-end pr-6 pointer-events-none select-none">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt=""
+            aria-hidden="true"
+            className="h-36 w-auto object-contain opacity-10 grayscale"
+          />
+        </div>
+        {/* Decorative circles */}
+        <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" />
+        <div className="absolute -bottom-6 -right-20 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
+
+        {/* Content */}
+        <div className="relative z-10 p-5 md:p-7">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-orange-100 text-sm font-medium mb-1">{greeting}, Juberbhai 👋</p>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                {data.companyName}
+              </h1>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+                {data.companyGstin && (
+                  <span className="text-orange-100 text-xs font-medium bg-white/15 px-2.5 py-0.5 rounded-full">
+                    GSTIN: {data.companyGstin}
+                  </span>
+                )}
+                <span className="text-orange-100 text-xs flex items-center gap-1">
+                  <CalendarDays className="h-3 w-3" />
+                  {currentMonth}
+                </span>
+              </div>
+            </div>
+            <Button asChild size="sm" className="bg-white text-orange-700 hover:bg-orange-50 shadow font-semibold shrink-0">
+              <Link href="/trips/new"><Plus className="h-4 w-4 mr-1" />New Trip</Link>
+            </Button>
+          </div>
+
+          {/* Mini stats in banner */}
+          <div className="grid grid-cols-3 gap-3 mt-5">
+            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
+              <p className="text-xs text-orange-100">This Month Billing</p>
+              <p className="text-lg font-bold mt-0.5">{formatCurrency(data.monthlyBilling)}</p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
+              <p className="text-xs text-orange-100">Est. Profit</p>
+              <p className={`text-lg font-bold mt-0.5 ${data.profit < 0 ? 'text-red-200' : ''}`}>
+                {formatCurrency(data.profit)}
+              </p>
+            </div>
+            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white">
+              <p className="text-xs text-orange-100">Pending</p>
+              <p className="text-lg font-bold mt-0.5 text-yellow-200">{formatCurrency(data.pendingPayments)}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* KPI Grid */}
