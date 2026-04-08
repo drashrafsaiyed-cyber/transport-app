@@ -72,6 +72,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
       igstPct={settings?.igstPercentage ?? 18}
       defaultGstType={settings?.defaultGstType ?? 'CGST_SGST'}
       invoiceNumber={invoiceNumber}
+      hasLogo={true}
     />
   )
 }

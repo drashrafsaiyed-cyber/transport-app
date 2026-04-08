@@ -62,12 +62,13 @@ interface Props {
   igstPct: number
   defaultGstType: string
   invoiceNumber: string
+  hasLogo?: boolean
 }
 
 export function InvoiceClient({
   trip, companyName, companyAddress, companyGst, invoiceFooter,
   currencySymbol, enableGst, cgstPct, sgstPct, igstPct,
-  defaultGstType, invoiceNumber,
+  defaultGstType, invoiceNumber, hasLogo,
 }: Props) {
   const [withGst, setWithGst] = useState(false)
   const [gstType, setGstType] = useState(defaultGstType)
@@ -166,16 +167,27 @@ export function InvoiceClient({
         {/* Header */}
         <div className="p-6 md:p-8 border-b">
           <div className="flex justify-between items-start flex-wrap gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">{companyName}</h2>
-              {companyAddress && (
-                <p className="text-sm text-gray-600 mt-1 max-w-xs whitespace-pre-line">{companyAddress}</p>
+            <div className="flex items-start gap-4">
+              {hasLogo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src="/logo.png"
+                  alt={companyName}
+                  className="h-16 w-auto object-contain"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                />
               )}
-              {companyGst && (
-                <p className="text-sm text-gray-600 mt-1">
-                  <span className="font-medium">GSTIN:</span> {companyGst}
-                </p>
-              )}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">{companyName}</h2>
+                {companyAddress && (
+                  <p className="text-sm text-gray-600 mt-1 max-w-xs whitespace-pre-line">{companyAddress}</p>
+                )}
+                {companyGst && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    <span className="font-medium">GSTIN:</span> {companyGst}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="text-right">
               <div className="inline-block bg-orange-50 border border-orange-200 rounded-lg px-5 py-3">
