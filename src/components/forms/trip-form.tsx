@@ -175,9 +175,17 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
           <div className="space-y-1">
             <Label>Party *</Label>
             <Select value={partyId} onValueChange={(v) => setValue('partyId', v ?? '')}>
-              <SelectTrigger><SelectValue placeholder="Select party" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Select party">
+                  {partyId ? (parties.find(p => p.id === partyId)?.partyName ?? 'Select party') : 'Select party'}
+                </SelectValue>
+              </SelectTrigger>
               <SelectContent>
-                {parties.map(p => <SelectItem key={p.id} value={p.id}>{p.partyName}</SelectItem>)}
+                {parties.map(p => (
+                  <SelectItem key={p.id} value={p.id} textValue={p.partyName}>
+                    {p.partyName}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.partyId && <p className="text-xs text-red-500">{errors.partyId.message}</p>}
@@ -185,9 +193,17 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
           <div className="space-y-1">
             <Label>Vehicle *</Label>
             <Select value={vehicleId} onValueChange={(v) => setValue('vehicleId', v ?? '')}>
-              <SelectTrigger><SelectValue placeholder="Select vehicle" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Select vehicle">
+                  {vehicleId ? (vehicles.find(v => v.id === vehicleId)?.vehicleNumber ?? 'Select vehicle') : 'Select vehicle'}
+                </SelectValue>
+              </SelectTrigger>
               <SelectContent>
-                {vehicles.map(v => <SelectItem key={v.id} value={v.id}>{v.vehicleNumber}</SelectItem>)}
+                {vehicles.map(v => (
+                  <SelectItem key={v.id} value={v.id} textValue={v.vehicleNumber}>
+                    {v.vehicleNumber}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.vehicleId && <p className="text-xs text-red-500">{errors.vehicleId.message}</p>}
@@ -195,9 +211,17 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
           <div className="space-y-1">
             <Label>Driver *</Label>
             <Select value={driverId} onValueChange={(v) => setValue('driverId', v ?? '')}>
-              <SelectTrigger><SelectValue placeholder="Select driver" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Select driver">
+                  {driverId ? (drivers.find(d => d.id === driverId)?.name ?? 'Select driver') : 'Select driver'}
+                </SelectValue>
+              </SelectTrigger>
               <SelectContent>
-                {drivers.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                {drivers.map(d => (
+                  <SelectItem key={d.id} value={d.id} textValue={d.name}>
+                    {d.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.driverId && <p className="text-xs text-red-500">{errors.driverId.message}</p>}

@@ -163,11 +163,19 @@ export function DriverForm({ driver, vehicles, mode }: Props) {
           <div className="space-y-1">
             <Label>Assigned Vehicle</Label>
             <Select value={vehicleId || 'none'} onValueChange={(v) => setValue('vehicleId', (v === 'none' || !v) ? '' : String(v))}>
-              <SelectTrigger><SelectValue placeholder="Select vehicle" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Select vehicle">
+                  {vehicleId && vehicleId !== 'none'
+                    ? (vehicles.find(v => v.id === vehicleId)?.vehicleNumber ?? 'Select vehicle')
+                    : 'None'}
+                </SelectValue>
+              </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="none" textValue="None">None</SelectItem>
                 {vehicles.map(v => (
-                  <SelectItem key={v.id} value={v.id}>{v.vehicleNumber}</SelectItem>
+                  <SelectItem key={v.id} value={v.id} textValue={v.vehicleNumber}>
+                    {v.vehicleNumber}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
