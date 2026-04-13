@@ -182,9 +182,7 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
               </SelectTrigger>
               <SelectContent>
                 {parties.map(p => (
-                  <SelectItem key={p.id} value={p.id} textValue={p.partyName}>
-                    {p.partyName}
-                  </SelectItem>
+                  <SelectItem key={p.id} value={p.id}>{p.partyName}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -200,9 +198,7 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
               </SelectTrigger>
               <SelectContent>
                 {vehicles.map(v => (
-                  <SelectItem key={v.id} value={v.id} textValue={v.vehicleNumber}>
-                    {v.vehicleNumber}
-                  </SelectItem>
+                  <SelectItem key={v.id} value={v.id}>{v.vehicleNumber}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -218,9 +214,7 @@ export function TripForm({ trip, parties, vehicles, drivers, defaultPartyId, mod
               </SelectTrigger>
               <SelectContent>
                 {drivers.map(d => (
-                  <SelectItem key={d.id} value={d.id} textValue={d.name}>
-                    {d.name}
-                  </SelectItem>
+                  <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

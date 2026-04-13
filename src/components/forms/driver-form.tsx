@@ -171,11 +171,9 @@ export function DriverForm({ driver, vehicles, mode }: Props) {
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none" textValue="None">None</SelectItem>
+                <SelectItem value="none">None</SelectItem>
                 {vehicles.map(v => (
-                  <SelectItem key={v.id} value={v.id} textValue={v.vehicleNumber}>
-                    {v.vehicleNumber}
-                  </SelectItem>
+                  <SelectItem key={v.id} value={v.id}>{v.vehicleNumber}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
